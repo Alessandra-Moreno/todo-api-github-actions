@@ -23,4 +23,3 @@ def test_adicionar_tarefa():
     )
 
     assert response.status_code == 201
-
