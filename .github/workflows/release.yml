@@ -1,0 +1,17 @@
+name: Release Automático
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar código
+        uses: actions/checkout@v3
+
+      - name: Criar Release
+        uses: softprops/action-gh-release@v1
