@@ -1,46 +1,48 @@
-from flask import Flask, jsonify, request
+from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
 
 tarefas = []
-contador_id = 1
 
 
-@app.route('/tarefas', methods=['GET'])
+# 👉 ROTA DA PÁGINA HTML
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+
+# 👉 LISTAR TAREFAS
+@app.route("/tarefas", methods=["GET"])
 def listar_tarefas():
-    return jsonify(tarefas), 200
+    return jsonify(tarefas)
 
 
-@app.route('/tarefas', methods=['POST'])
+# 👉 ADICIONAR TAREFA
+@app.route("/tarefas", methods=["POST"])
 def adicionar_tarefa():
-    global contador_id
+    data = request.get_json()
 
-    dados = request.get_json()
-
-    if not dados or 'titulo' not in dados:
-        return jsonify({'erro': 'Título é obrigatório'}), 400
-
-    nova_tarefa = {
-        "id": contador_id,
-        "titulo": dados['titulo'],
-        "feito": False
+    nova = {
+        "id": len(tarefas) + 1,
+        "titulo": data["titulo"],
+        "concluida": False
     }
 
-    tarefas.append(nova_tarefa)
-    contador_id += 1
+    tarefas.append(nova)
 
-    return jsonify(nova_tarefa), 201
-
-
-@app.route('/tarefas/<int:id>', methods=['PUT'])
-def atualizar_status(id):
-    for tarefa in tarefas:
-        if tarefa["id"] == id:
-            tarefa["feito"] = not tarefa["feito"]
-            return jsonify(tarefa), 200
-
-    return jsonify({'erro': 'Tarefa não encontrada'}), 404
+    return jsonify(nova), 201
 
 
-if __name__ == '__main__':
+# 👉 MARCAR COMO CONCLUÍDA
+@app.route("/tarefas/<int:id>", methods=["PUT"])
+def concluir_tarefa(id):
+    for t in tarefas:
+        if t["id"] == id:
+            t["concluida"] = not t["concluida"]
+            return jsonify(t)
+
+    return jsonify({"erro": "não encontrada"}), 404
+
+
+if __name__ == "__main__":
     app.run(debug=True)
