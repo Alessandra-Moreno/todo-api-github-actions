@@ -4,25 +4,29 @@
     <title>Lista de Tarefas</title>
 </head>
 <body>
+
     <h1>Lista de Tarefas</h1>
 
-    <form method="POST" action="/tarefas">
-        <input type="text" name="titulo" placeholder="Digite a tarefa" required>
+    <form action="/add" method="post">
+        <input type="text" name="nome" placeholder="Digite uma tarefa" required>
         <button type="submit">Adicionar</button>
     </form>
 
-    <h2>Tarefas:</h2>
     <ul>
         {% for tarefa in tarefas %}
             <li>
-                {{ tarefa.titulo }} - 
-                {% if tarefa.concluida %}
-                    ✅ Concluída
-                {% else %}
-                    ❌ Pendente
-                {% endif %}
+                <form action="/toggle/{{ tarefa.id }}" method="post" style="display:inline;">
+                    <button type="submit" style="border:none; background:none; cursor:pointer;">
+                        {% if tarefa.feito %}
+                            ✅ <s>{{ tarefa.nome }}</s>
+                        {% else %}
+                            ⬜ {{ tarefa.nome }}
+                        {% endif %}
+                    </button>
+                </form>
             </li>
         {% endfor %}
     </ul>
+
 </body>
 </html>
