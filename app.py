@@ -1,51 +1,47 @@
-from flask import Flask, jsonify, request
+from flask import Flask, request, jsonify, render_template, redirect
 
 app = Flask(__name__)
 
-tarefas = [
-    {"id": 1, "titulo": "Estudar a materia", "concluida": False}
-]
+tarefas = []
+
+
+@app.route("/")
+def home():
+    return render_template("index.html", tarefas=tarefas)
 
 
 @app.route("/tarefas", methods=["GET"])
-def listar_tarefas():
+def listar():
     return jsonify(tarefas)
 
 
 @app.route("/tarefas", methods=["POST"])
-def adicionar_tarefa():
-    nova_tarefa = request.json
+def adicionar():
+    if request.is_json:
+        data = request.json
+        titulo = data.get("titulo")
+    else:
+        titulo = request.form.get("titulo")
 
     tarefa = {
         "id": len(tarefas) + 1,
-        "titulo": nova_tarefa["titulo"],
+        "titulo": titulo,
         "concluida": False
     }
 
     tarefas.append(tarefa)
-    return jsonify(tarefa), 201
+
+    return redirect("/")  # volta pra página principal
 
 
 @app.route("/tarefas/<int:id>", methods=["PUT"])
-def atualizar_tarefa(id):
-    for tarefa in tarefas:
-        if tarefa["id"] == id:
-            dados = request.json
-            tarefa["titulo"] = dados.get("titulo", tarefa["titulo"])
-            tarefa["concluida"] = dados.get("concluida", tarefa["concluida"])
-            return jsonify(tarefa)
+def concluir(id):
+    for t in tarefas:
+        if t["id"] == id:
+            t["concluida"] = True
+            return jsonify(t)
 
-    return jsonify({"erro": "Tarefa não encontrada"}), 404
-
-
-@app.route("/tarefas/<int:id>", methods=["DELETE"])
-def deletar_tarefa(id):
-    for tarefa in tarefas:
-        if tarefa["id"] == id:
-            tarefas.remove(tarefa)
-            return jsonify({"mensagem": "Tarefa removida"})
-
-    return jsonify({"erro": "Tarefa não encontrada"}), 404
+    return {"erro": "Tarefa não encontrada"}, 404
 
 
 if __name__ == "__main__":
