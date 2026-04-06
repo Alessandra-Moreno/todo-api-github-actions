@@ -1,47 +1,47 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, render_template, redirect
 
 app = Flask(__name__)
 
 tarefas = []
 
 
-# 👉 ROTA DA PÁGINA HTML
+# ROTA DA PÁGINA HTML
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return render_template("index.html", tarefas=tarefas)
 
 
-# 👉 LISTAR TAREFAS
+# LISTAR TAREFAS (opcional, API)
 @app.route("/tarefas", methods=["GET"])
 def listar_tarefas():
-    return jsonify(tarefas)
+    return {"tarefas": tarefas}
 
 
-# 👉 ADICIONAR TAREFA
+# ADICIONAR TAREFA
 @app.route("/tarefas", methods=["POST"])
 def adicionar_tarefa():
-    data = request.get_json()
+    nome = request.form["nome"]
 
     nova = {
         "id": len(tarefas) + 1,
-        "titulo": data["titulo"],
-        "concluida": False
+        "nome": nome,
+        "feito": False
     }
 
     tarefas.append(nova)
 
-    return jsonify(nova), 201
+    return redirect("/")
 
 
-# 👉 MARCAR COMO CONCLUÍDA
-@app.route("/tarefas/<int:id>", methods=["PUT"])
-def concluir_tarefa(id):
-    for t in tarefas:
-        if t["id"] == id:
-            t["concluida"] = not t["concluida"]
-            return jsonify(t)
+# MARCAR COMO FEITA / DESFEITA
+@app.route("/toggle/<int:id>", methods=["POST"])
+def toggle_tarefa(id):
+    for tarefa in tarefas:
+        if tarefa["id"] == id:
+            tarefa["feito"] = not tarefa["feito"]
+            break
 
-    return jsonify({"erro": "não encontrada"}), 404
+    return redirect("/")
 
 
 if __name__ == "__main__":

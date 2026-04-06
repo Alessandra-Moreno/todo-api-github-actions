@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Tarefas</title>
 </head>
 <body>
 
     <h1>Lista de Tarefas</h1>
 
-    <form action="/add" method="post">
+    <form action="/tarefas" method="POST">
         <input type="text" name="nome" placeholder="Digite uma tarefa" required>
         <button type="submit">Adicionar</button>
     </form>
@@ -15,8 +17,8 @@
     <ul>
         {% for tarefa in tarefas %}
             <li>
-                <form action="/toggle/{{ tarefa.id }}" method="post" style="display:inline;">
-                    <button type="submit" style="border:none; background:none; cursor:pointer;">
+                <form action="/toggle/{{ tarefa.id }}" method="POST" style="display: inline;">
+                    <button type="submit" style="border: none; background: none; cursor: pointer;">
                         {% if tarefa.feito %}
                             ✅ <s>{{ tarefa.nome }}</s>
                         {% else %}
