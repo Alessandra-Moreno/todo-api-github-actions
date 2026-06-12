@@ -1,31 +1,16 @@
-# Todo API com GitHub Actions
+# Todo API
 
-Projeto de exemplo utilizando GitHub Actions para CI/CD.
+## Serviços Docker
 
-## Funcionalidades
-- Adicionar tarefas
-- Listar tarefas
-- Concluir tarefas
+- Flask (Aplicação Web)
+- PostgreSQL (Banco de Dados)
+- Adminer (Interface de Administração)
+
+## Execução
+
+docker compose up --build
 
 ## GitHub Actions
-- Execução automática de testes
-- Verificação de código (lint)
-- Release automático por tag
 
-## Como rodar
-
-```bash
-pip install -r requirements.txt
-python app.py
-
-
----
-
-# 🚀 AGORA: PASSO A PASSO PRA RODAR
-
-## 🧩 1. Instalar dependências
-
-No terminal:
-
-```bash
-pip install -r requirements.txt
+- CI (Flake8 + Pytest)
+- Publicação automática de imagem Docker no GitHub Container Registry
