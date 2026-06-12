@@ -1,6 +1,10 @@
 from flask import Flask, request, render_template, redirect
+import os
 
 app = Flask(__name__)
+
+# Variável de ambiente (atende ao requisito da atividade)
+APP_ENV = os.getenv("APP_ENV", "development")
 
 tarefas = []
 
@@ -11,16 +15,19 @@ def home():
     return render_template("index.html", tarefas=tarefas)
 
 
-# LISTAR TAREFAS (opcional, API)
+# LISTAR TAREFAS (API)
 @app.route("/tarefas", methods=["GET"])
 def listar_tarefas():
-    return {"tarefas": tarefas}
+    return {"tarefas": tarefas}, 200
 
 
 # ADICIONAR TAREFA
 @app.route("/tarefas", methods=["POST"])
 def adicionar_tarefa():
-    nome = request.form["nome"]
+    nome = request.form.get("nome")
+
+    if not nome:
+        return {"erro": "Nome da tarefa é obrigatório"}, 400
 
     nova = {
         "id": len(tarefas) + 1,
@@ -45,4 +52,5 @@ def toggle_tarefa(id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    print(f"Ambiente: {APP_ENV}")
+    app.run(host="0.0.0.0", port=5000)
