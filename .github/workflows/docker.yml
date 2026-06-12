@@ -23,11 +23,9 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
+      - name: Definir nome da imagem
+        run: echo "IMAGE_NAME=ghcr.io/alessandra-moreno/todo-api-github-actions:latest" >> $GITHUB_ENV
       - name: Build da imagem
-        run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/todo-api-github-actions:latest .
-
+        run: docker build -t $IMAGE_NAME .
       - name: Publicar imagem
-        run: |
-          docker push ghcr.io/${{ github.repository_owner }}/todo-api-github-actions:latest
+        run: docker push $IMAGE_NAME
