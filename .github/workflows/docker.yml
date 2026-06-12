@@ -1,0 +1,33 @@
+name: Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Clonar repositório
+        uses: actions/checkout@v4
+
+      - name: Login no GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build da imagem
+        run: |
+          docker build -t ghcr.io/${{ github.repository_owner }}/todo-api-github-actions:latest .
+
+      - name: Publicar imagem
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/todo-api-github-actions:latest
