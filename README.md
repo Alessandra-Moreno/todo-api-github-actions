@@ -1,16 +1,55 @@
-# Todo API
+# Todo API com GitHub Actions
 
-## Serviços Docker
+Projeto de exemplo utilizando GitHub Actions, Docker e Docker Compose.
 
-- Flask (Aplicação Web)
-- PostgreSQL (Banco de Dados)
-- Adminer (Interface de Administração)
+## Funcionalidades
 
-## Execução
-
-docker compose up --build
+- Adicionar tarefas
+- Listar tarefas
+- Concluir tarefas
 
 ## GitHub Actions
 
-- CI (Flake8 + Pytest)
-- Publicação automática de imagem Docker no GitHub Container Registry
+- Execução automática de testes
+- Verificação de código (lint)
+- Release automático por tag
+- Build automático de imagem Docker
+- Publicação automática da imagem no GitHub Container Registry (GHCR)
+
+## Docker
+
+A aplicação utiliza Docker Compose com 3 serviços:
+
+- Flask (aplicação)
+- PostgreSQL (banco de dados)
+- Adminer (gerenciamento do banco)
+
+Também utiliza:
+
+- Variáveis de ambiente (.env)
+- Volume Docker para persistência dos dados
+
+## Como rodar com Python
+
+```bash
+pip install -r requirements.txt
+python app.py
+```
+
+## Como rodar com Docker
+
+```bash
+docker compose up --build
+```
+
+Aplicação:
+
+```text
+http://localhost:5000
+```
+
+Adminer:
+
+```text
+http://localhost:8080
+```
